@@ -1,0 +1,99 @@
+                    Isaac Rojas 
+
+1. C++ Program
+
+#include "BubbleSortAlgorithm.h"
+
+float* CreateFloatArray(int size) {
+    return new float[size];
+}
+
+void BubbleSortDescending(float* array, int size) {
+    bool swap;
+    float temp;
+
+    do {
+        swap = false;
+        for (int count = 0; count < (size - 1); count++) {
+            if (array[count] < array[count + 1]) {
+                temp = array[count];
+                array[count] = array[count + 1];
+                array[count + 1] = temp;
+                swap = true;
+            }
+        }
+    } while (swap);
+}
+
+double Median(float* array, int size) {
+    if (size % 2 == 0) {
+        // If even number of elements, return the average of the middle two elements
+        return static_cast<double>(array[size / 2 - 1] + array[size / 2]) / 2.0;
+    } else {
+        // If odd number of elements, return the middle element
+        return static_cast<double>(array[size / 2]);
+    }
+}
+
+2. Main Program
+
+#include <iostream>
+#include "BubbleSortAlgorithm.h"
+
+int main() {
+    int size;
+    std::cout << "Enter the size of the array: ";
+    std::cin >> size;
+
+    float* array = CreateFloatArray(size);
+
+    std::cout << "Enter " << size << " float numbers: ";
+    for (int i = 0; i < size; ++i) {
+        std::cin >> array[i];
+    }
+
+    BubbleSortDescending(array, size);
+
+    double median = Median(array, size);
+
+    std::cout << "Median: " << median << std::endl;
+
+    delete[] array;
+
+    return 0;
+}
+
+
+3. Header File
+
+ #ifndef BUBBLESORTALGORITHM_H
+#define BUBBLESORTALGORITHM_H
+
+float* CreateFloatArray(int size);
+void BubbleSortDescending(float* array, int size);
+double Median(float* array, int size);
+
+#endif
+
+
+
+E.  Shows the output code with the following values:
+Enter the size of the array: 6
+Enter 6 float numbers: 7.3
+1.9
+2.4
+6.4
+3.5
+9.3
+Median: 4.95
+Program ended with exit code: 0
+
+
+b.     Enter the size of the array: 5
+Enter 5 float numbers: 7.3
+1.9
+2.4
+6.4
+3.5
+Median: 3.5
+Program ended with exit code: 0
