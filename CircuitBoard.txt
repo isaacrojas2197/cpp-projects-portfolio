@@ -1,0 +1,150 @@
+                        Isaac Rojas 
+1. C++ Program
+
+#include<iostream>
+#include<iomanip>
+#include "CircuitBoard.h"
+using namespace::std;
+
+CircuitBoard::CircuitBoard(double aCost, double aPercentageOfProfit) : cost(aCost), percentageOfProfit(aPercentageOfProfit){
+    cout << "Welcome to the constructor" << endl;
+}
+CircuitBoard::~CircuitBoard(){
+    cout << "\nThe destructor is now running!" << endl;
+}
+CircuitBoard& CircuitBoard::setCost(double aCost){
+    if(aCost < 0) throw NegativeCost(); // Modification
+    cost = aCost;
+    return *this;
+}
+CircuitBoard& CircuitBoard::setPercentageOfProfit(double aPercentageOfProfit){
+    if(aPercentageOfProfit < 0) throw NegativePercent(); // Modification
+    percentageOfProfit = aPercentageOfProfit;
+    return *this;
+}
+double CircuitBoard::getCost() const{
+    return cost;
+}
+double CircuitBoard::getPercentOfProfit() const{
+    return percentageOfProfit / 100.0;
+}
+double CircuitBoard::getTotalCost() const{
+    return cost + cost * getPercentOfProfit();
+}
+void CircuitBoard::display() const{
+    cout << fixed << showpoint << setprecision(2) << endl;
+    cout << "Price of Circuit Board: $" << cost << endl;
+    cout << "Profit percentage: $" << cost * getPercentOfProfit() << endl;
+    cout << "Total cost: $ " << getTotalCost() << endl;
+}
+
+// Inserction Modification
+std::ostream& operator<<(std::ostream& os, const CircuitBoard& circuitBoard) {
+    os << "Price of Circuit Board: $" << circuitBoard.cost << endl;
+    os << "Profit percentage: $" << circuitBoard.cost * circuitBoard.getPercentOfProfit() << endl;
+    os << "Total cost: $ " << circuitBoard.getTotalCost() << endl;
+    return os;
+}
+// Extraction Modification
+std::istream& operator>>(std::istream& is, CircuitBoard& circuitBoard) {
+    double tmpCost, tmpPercentageOfProfit;
+    cout << "Enter the price of the Circuit Board: $";
+    is >> tmpCost;
+    cout << "Enter the profit percentage (Ex. 35): ";
+    is >> tmpPercentageOfProfit;
+    circuitBoard.setCost(tmpCost).setPercentageOfProfit(tmpPercentageOfProfit);
+    return is;
+}
+
+
+2. Header
+
+#ifndef CIRCUIT_BOARD
+#define CIRCUIT_BOARD
+
+#include <iostream> // Modification
+
+class NegativeCost : public std::exception {
+public:
+    const char* what() const noexcept override {
+        return "Error: Cost cannot be negative.";
+    }
+};
+
+class NegativePercent : public std::exception {
+public:
+    const char* what() const noexcept override {
+        return "Error: Profit percentage cannot be negative.";
+    }
+};
+
+class CircuitBoard {
+private:
+    double cost;
+    double percentageOfProfit;
+public:
+    CircuitBoard(double aCost = 0.0, double aPercentageOfProfit = 0.0);
+    ~CircuitBoard();
+    CircuitBoard& setCost(double aCost); // Modification
+    CircuitBoard& setPercentageOfProfit(double aPercentageOfProfit); // Modification
+    double getCost() const;
+    double getPercentOfProfit() const;
+    double getTotalCost() const;
+    void display() const;
+
+    // Insertion Modification
+    friend std::ostream& operator<<(std::ostream& os, const CircuitBoard& circuitBoard);
+    // Extraction Modification
+    friend std::istream& operator>>(std::istream& is, CircuitBoard& circuitBoard);
+};
+
+#endif
+
+
+3. Driver Program
+
+#include<iostream>
+#include "CircuitBoard.h"
+using namespace std;
+
+int main(){
+    CircuitBoard circuitBoard;
+    char again;
+    do {
+        try {
+            cin >> circuitBoard;
+            cout << circuitBoard;
+        } catch (const NegativeCost& e) {
+            cout << e.what() << endl;
+        } catch (const NegativePercent& e) {
+            cout << e.what() << endl;
+        }
+            cout << "Do you want to calculate another circuit board price (Y/N)?: ";
+        cin >> again;
+    } while (again == 'Y' || again == 'y');
+    return 0;
+}// end main
+
+
+
+
+Output:
+
+Welcome to the constructor
+Enter the price of the Circuit Board: $200
+Enter the profit percentage (Ex. 35): 25
+Price of Circuit Board: $200
+Profit percentage: $50
+Total cost: $ 250
+Do you want to calculate another circuit board price (Y/N)?: Y
+Enter the price of the Circuit Board: $-100
+Enter the profit percentage (Ex. 35): 25
+Error: Cost cannot be negative.
+Do you want to calculate another circuit board price (Y/N)?: Y
+Enter the price of the Circuit Board: $100
+Enter the profit percentage (Ex. 35): -20
+Error: Profit percentage cannot be negative.
+Do you want to calculate another circuit board price (Y/N)?: N
+
+The destructor is now running!
+Program ended with exit code: 0
